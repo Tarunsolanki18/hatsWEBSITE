@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Sections ko shuru me chhupane ke liye, taaki JavaScript unhe manage kar sake */
+    .admin-content-section {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="flex items-center justify-between mb-8 pb-4 border-b">
+      <h1 class="text-3xl font-bold text-gray-800">Admin Panel</h1>
+      <div class="flex gap-3 items-center">
+        <a href="dashboard.html" class="text-blue-600 hover:text-blue-800 underline">User View</a>
+        <!-- Home button to show main cards -->
+        <button id="home-button" onclick="window.location.hash='';" class="bg-black text-white px-3 py-1.5 rounded-lg shadow-md hover:bg-gray-700 transition">Home</button>
+        <button id="logout" class="bg-red-600 text-white px-3 py-1.5 rounded-lg shadow-md hover:bg-red-700 transition">Logout</button>
+      </div>
+      </div>
+
+    <!-- Main Dashboard Stats (Visible on Home) -->
+    <!-- FIX: grid-cols-3 for desktop and grid-cols-1 for mobile devices -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8" id="main-stats-section">
+      <!-- Total Users Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg flex items-center justify-between border-t-4 border-blue-500">
+        <div>
+          <div class="text-sm font-medium text-gray-500">Total Users</div>
+          <div id="count-users" class="text-4xl font-extrabold text-gray-800 mt-1">0</div>
+        </div>
+        <div class="bg-blue-100 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Pending Reports Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg flex items-center justify-between border-t-4 border-yellow-500">
+        <div>
+          <div class="text-sm font-medium text-gray-500">Pending Reports</div>
+          <div id="count-pending" class="text-4xl font-extrabold text-gray-800 mt-1">0</div>
+        </div>
+        <div class="bg-yellow-100 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Active Campaigns Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg flex items-center justify-between border-t-4 border-green-500">
+        <div>
+          <div class="text-sm font-medium text-gray-500">Active Campaigns</div>
+          <div id="count-campaigns" class="text-4xl font-extrabold text-gray-800 mt-1">0</div>
+        </div>
+        <div class="bg-green-100 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-2.236 9.168-5.514C18.335 1.039 18.665 1 19 1h.5a.5.5 0 01.5.5v.634a1.78 1.78 0 01-1.817 1.737h-.118a1.78 1.78 0 00-1.675 1.342l-.28.735-1.433 3.743A4.001 4.001 0 017 14h-1.436c-1.386 0-2.5 1.114-2.5 2.5 0 .574.194 1.11.518 1.562l.132.193z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Main Action Cards (New Design - Visible on Home) -->
+    <!-- FIX: grid-cols-3 for desktop and grid-cols-1 for mobile devices -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8 mt-6" id="main-menu-section">
+        
+        <!-- REPORTS Card (Clickable) -->
+        <a href="#reports" class="block bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 ease-in-out cursor-pointer text-center transform hover:scale-[1.02]">
+            <div class="mx-auto bg-indigo-100 p-4 rounded-full inline-block mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-semibold text-gray-800">Reports</div>
+            <div class="text-gray-500 mt-1">Check and Update User Submissions</div>
+        </a>
+
+        <!-- USERS & EARNINGS Card (Clickable) -->
+        <a href="#users" class="block bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 ease-in-out cursor-pointer text-center transform hover:scale-[1.02]">
+            <div class="mx-auto bg-purple-100 p-4 rounded-full inline-block mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3-.895-3-2 1.343-2 3-2zM9 10a3 3 0 116 0 3 3 0 01-6 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-semibold text-gray-800">Users & Earnings</div>
+            <div class="text-gray-500 mt-1">Manage Earning Payouts</div>
+        </a>
+
+        <!-- CAMPAIGNS Card (Clickable) -->
+        <a href="#campaigns" class="block bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 ease-in-out cursor-pointer text-center transform hover:scale-[1.02]">
+            <div class="mx-auto bg-green-100 p-4 rounded-full inline-block mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-2.236 9.168-5.514C18.335 1.039 18.665 1 19 1h.5a.5.5 0 01.5.5v.634a1.78 1.78 0 01-1.817 1.737h-.118a1.78 1.78 0 00-1.675 1.342l-.28.735-1.433 3.743A4.001 4.001 0 017 14h-1.436c-1.386 0-2.5 1.114-2.5 2.5 0 .574.194 1.11.518 1.562l.132.193z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-semibold text-gray-800">Live Campaigns</div>
+            <div class="text-gray-500 mt-1">Edit Payouts & Referral Links</div>
+        </a>
+    </div>
+
+
+    <!-- -------------------- SECTIONS START -------------------- -->
+    <!-- Sabhi sections mein 'admin-content-section' class zaroori hai -->
+
+    <!-- 1. USERS & EARNINGS SECTION -->
+    <div id="users-section" class="bg-white rounded-xl shadow-lg mb-8 admin-content-section">
+      <div class="p-4 sm:p-6 border-b flex items-center justify-between">
+        <h2 class="font-semibold text-xl">Users & Earnings Management</h2>
+        </div>
+      <div id="users" class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 sm:p-6">
+        <!-- User data will be loaded here by JavaScript -->
+      </div>
+    </div>
+
+
+    <!-- 2. REPORTS SECTION -->
+    <div id="reports-section" class="bg-white rounded-xl shadow-lg mb-8 admin-content-section">
+      <div class="p-4 sm:p-6 border-b flex flex-wrap items-center justify-between gap-4">
+        <h2 class="font-semibold text-xl">Reports & Submissions</h2>
+        <div class="flex gap-2 flex-wrap">
+          <select id="filter-user" class="border rounded-lg px-3 py-1 text-sm focus:ring-blue-500 focus:border-blue-500">
+            <option value="">All Users</option>
+            <!-- User options will be populated by JavaScript -->
+          </select>
+          <select id="filter-status" class="border rounded-lg px-3 py-1 text-sm focus:ring-blue-500 focus:border-blue-500">
+            <option value="">All Status</option>
+            <option>Not Found</option>
+            <option>Pending</option>
+            <option>Under Review</option>
+            <option>Account Open</option>
+            <option>Received</option>
+            <option>Approved</option>
+            <option>Rejected</option>
+          </select>
+          <select id="filter-trade" class="border rounded-lg px-3 py-1 text-sm focus:ring-blue-500 focus:border-blue-500">
+            <option value="">All Trade</option>
+            <option>Pending</option>
+            <option>Done</option>
+          </select>
+          <select id="filter-payment" class="border rounded-lg px-3 py-1 text-sm focus:ring-blue-500 focus:border-blue-500">
+            <option value="">All Payment</option>
+            <option>Not Paid</option>
+            <option>Partial</option>
+            <option>Paid</option>
+          </select>
+        </div>
+        </div>
+      <!-- Account Open Reports Section -->
+      <div class="p-4 sm:p-6 border-b cursor-pointer" id="account-open-header" onclick="toggleReportSection('account-open-reports')">
+        <h3 class="font-semibold text-lg text-blue-700">Account Open Reports</h3>
+      </div>
+      <div id="account-open-reports" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 p-4 sm:p-6">
+        <!-- Account Open Report cards will be loaded here by JavaScript -->
+        <div id="no-account-open-reports" class="col-span-full text-center py-8 text-gray-500">
+          No account open reports available
+        </div>
+      </div>
+      
+      <!-- Trade Reports Section -->
+      <div class="p-4 sm:p-6 border-b border-t cursor-pointer" id="trade-reports-header" onclick="toggleReportSection('trade-reports')">
+        <h3 class="font-semibold text-lg text-green-700">Trade Reports</h3>
+      </div>
+      <div id="trade-reports" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 p-4 sm:p-6">
+        <!-- Trade Report cards will be loaded here by JavaScript -->
+        <div id="no-trade-reports" class="col-span-full text-center py-8 text-gray-500">
+          No trade reports available
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 3. CAMPAIGNS SECTION -->
+    <div id="campaigns-section" class="bg-white rounded-xl shadow-lg mb-8 admin-content-section">
+      <div class="p-4 sm:p-6 border-b flex items-center justify-between">
+        <h2 class="font-semibold text-xl">Campaigns Management </h2>
+        <button id="add-campaign" class="bg-black text-white text-sm px-4 py-2 rounded-lg hover:bg-gray-700 transition">Add Campaign</button>
+        </div>
+      <div id="campaigns" class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 sm:p-6">
+        <!-- Campaign forms will be loaded here by JavaScript -->
+      </div>
+    </div>
+    <!-- -------------------- SECTIONS END -------------------- -->
+
+
+  </div>
+
+  <!-- Supabase Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <!-- Custom Config and App Logic -->
+  <script src="./assets/config.js"></script>
+  <script src="./assets/app.js"></script>
+  <script>
+    // Function to toggle report sections visibility
+    function toggleReportSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section.style.display === 'none') {
+        section.style.display = 'grid';
+      } else {
+        section.style.display = 'none';
+      }
+    }
+  </script> 
+  
+  <script>
+    /* ---------------------------------------------------------------------- */
+    /* ------------------------- JAVASCRIPT LOGIC --------------------------- */
+    /* ---------------------------------------------------------------------- */
+
+    // Function to handle showing notifications, replacing alert()
+    function showNotification(message) {
+        // We replace the blocking alert() with a console log for a non-blocking experience.
+        console.log('[NOTIFICATION]', message); 
+    }
+
+    // Function to handle the view change based on URL hash
+    function showSection(hash) {
+      // Sabhi content sections ko chhupa do
+      document.querySelectorAll('.admin-content-section').forEach(el => {
+        el.style.display = 'none';
+      });
+      // Main menu (cards) aur stats ko bhi chhupa do
+      document.getElementById('main-menu-section').style.display = 'none';
+      document.getElementById('main-stats-section').style.display = 'none';
+
+      let target = null;
+      const cleanHash = hash.replace('#', '');
+
+      if (cleanHash === 'users') {
+        target = document.getElementById('users-section');
+      } else if (cleanHash === 'reports') {
+        target = document.getElementById('reports-section');
+      } else if (cleanHash === 'campaigns') {
+        target = document.getElementById('campaigns-section');
+      }
+
+      if (target) {
+        // Agar specific section milta hai, toh use dikhao
+        target.style.display = 'block';
+        window.scrollTo(0, 0); 
+      } else {
+        // Agar koi hash nahi hai, toh main menu aur stats dikhao (Home View)
+        document.getElementById('main-menu-section').style.display = 'grid';
+        document.getElementById('main-stats-section').style.display = 'grid';
+      }
+    }
+
+    // Hash change hone par section load karo
+    window.addEventListener('hashchange', () => showSection(window.location.hash));
+    window.addEventListener('DOMContentLoaded', () => {
+      showSection(window.location.hash);
+    });
+
+    /* ---------------------------------------------------------------------- */
+    /* ------------------ EXISTING DATA LOADING AND ACTIONS ----------------- */
+    /* ---------------------------------------------------------------------- */
+    
+    // Yeh saara logic App.js file se Supabase functions ko use karta hai.
+
+    (async function() {
+      
+      // 1. Check Admin Session (App.requireAdmin is defined in app.js)
+      try {
+        await App.requireAdmin({ redirectTo: 'login.html' });
+      } catch (e) {
+        console.error("Admin check failed or redirected:", e);
+        return;
+      }
+
+      document.getElementById('logout').addEventListener('click', async () => { 
+        await App.signOut(); 
+        window.location.href = 'login.html'; 
+      });
+
+      // Function to load all reports (used for filtering)
+      const accountOpenReportsEl = document.getElementById('account-open-reports');
+      const tradeReportsEl = document.getElementById('trade-reports');
+      const noAccountOpenReportsEl = document.getElementById('no-account-open-reports');
+      const noTradeReportsEl = document.getElementById('no-trade-reports');
+      const filterUserEl = document.getElementById('filter-user');
+      
+      // Function to populate user filter dropdown
+      const populateUserFilter = async () => {
+        const { data } = await App.supabase.from('reports').select('user_name').order('user_name');
+        const userFilter = document.getElementById('filter-user');
+        
+        // Clear existing options except the first one
+        while (userFilter.options.length > 1) {
+          userFilter.remove(1);
+        }
+        
+        // Add unique user names
+        const uniqueUsers = [...new Set(data.map(r => r.user_name).filter(Boolean))];
+        uniqueUsers.forEach(userName => {
+          const option = document.createElement('option');
+          option.value = userName;
+          option.textContent = userName;
+          userFilter.appendChild(option);
+        });
+      };
+      
+      const loadReports = async () => {
+        let query = App.supabase.from('reports').select('*').order('created_at', { ascending: false });
+        const u = document.getElementById('filter-user').value;
+        const s = document.getElementById('filter-status').value;
+        const t = document.getElementById('filter-trade').value;
+        const p = document.getElementById('filter-payment').value;
+        
+        if (u) query = query.eq('user_name', u);
+        if (s) query = query.eq('status', s);
+        if (t) query = query.eq('trade_status', t);
+        if (p) query = query.eq('payment_status', p);
+        
+        const { data } = await query;
+        
+        // Clear existing reports
+        accountOpenReportsEl.innerHTML = '';
+        tradeReportsEl.innerHTML = '';
+        
+        // Show/hide "no reports" messages
+        let hasAccountOpenReports = false;
+        let hasTradeReports = false;
+        
+        (data || []).forEach(r => {
+          const card = document.createElement('div');
+          card.className = 'bg-gray-50 p-4 rounded-lg shadow text-sm';
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <div class="font-semibold text-base">${r.application_name || '-'}</div>
+                <div class="text-xs text-gray-700">${r.user_name || 'Unknown User'}</div>
+                <div class="font-mono text-xs text-gray-500">${r.id}</div>
+              </div>
+              <a class="text-blue-600 underline" ${r.payment_proof_url ? `href="${r.payment_proof_url}" target="_blank"` : 'class="pointer-events-none text-gray-400"'}>${r.payment_proof_url ? 'View Proof' : 'No Proof'}</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Status</label>
+                <select class="w-full border rounded px-2 py-1" data-k="status">
+                  ${['Not Found', 'Pending', 'Under Review', 'Account Open', 'Received', 'Approved', 'Rejected'].map(v => `<option ${v=== (r.status||'Received') ? 'selected':''}>${v}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Trade</label>
+                <select class="w-full border rounded px-2 py-1" data-k="trade_status">
+                  ${['Pending','Done'].map(v => `<option ${v=== (r.trade_status||'Pending') ? 'selected':''}>${v}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Payment</label>
+                <select class="w-full border rounded px-2 py-1" data-k="payment_status">
+                  ${['Not Paid','Partial','Paid'].map(v => `<option ${v=== (r.payment_status||'Not Paid') ? 'selected':''}>${v}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <button class="w-full bg-black text-white px-3 py-2 rounded" data-save>Save Changes</button>
+          `;
+          card.querySelector('[data-save]').addEventListener('click', async () => {
+            const selects = card.querySelectorAll('select');
+            const payload = { id: r.id };
+            selects.forEach(s => payload[s.getAttribute('data-k')] = s.value);
+            const { error } = await App.supabase.from('reports').update(payload).eq('id', r.id);
+            if (error) showNotification('Error updating report: ' + error.message); else {
+              // Update pending count if status changes from Received
+              if(r.status === 'Received' && payload.status !== 'Received') updateCounts();
+              showNotification('Report updated successfully.');
+              await loadReports();
+            }
+          });
+          
+          // Determine which container to add the card to based on status
+          if (r.status === 'Account Open') {
+            accountOpenReportsEl.appendChild(card);
+            hasAccountOpenReports = true;
+          } else {
+            tradeReportsEl.appendChild(card);
+            hasTradeReports = true;
+          }
+        });
+        
+        // Show/hide "no reports" messages
+        noAccountOpenReportsEl.style.display = hasAccountOpenReports ? 'none' : 'block';
+        noTradeReportsEl.style.display = hasTradeReports ? 'none' : 'block';
+      };
+
+      // Add event listeners for filters
+      document.getElementById('filter-user').addEventListener('change', loadReports);
+      document.getElementById('filter-status').addEventListener('change', loadReports);
+      document.getElementById('filter-trade').addEventListener('change', loadReports);
+      document.getElementById('filter-payment').addEventListener('change', loadReports);
+      
+      // Listen for new report submissions
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'newReportSubmitted') {
+          // Refresh reports and user filter
+          populateUserFilter();
+          loadReports();
+        }
+      });
+      
+      // Initialize reports section
+      populateUserFilter();
+      loadReports();
+
+      // Function to load all campaigns (used for CRUD)
+      const campaignsEl = document.getElementById('campaigns');
+      const renderCampaignRow = (c) => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-50 p-4 rounded-lg shadow text-sm';
+        card.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div><label class="block text-xs text-gray-500 mb-1">Name</label><input class="w-full border rounded px-2 py-1" placeholder="Name" value="${c?.name || ''}" data-k="name"/></div>
+            <div><label class="block text-xs text-gray-500 mb-1">Referral Link</label><input class="w-full border rounded px-2 py-1" placeholder="Referral Link" value="${c?.referral_link || ''}" data-k="referral_link"/></div>
+            <div><label class="block text-xs text-gray-500 mb-1">Payout With Trade</label><input class="w-full border rounded px-2 py-1" placeholder="Payout With Trade" value="${c?.payout_with_trade || ''}" data-k="payout_with_trade"/></div>
+            <div><label class="block text-xs text-gray-500 mb-1">Payout Without Trade</label><input class="w-full border rounded px-2 py-1" placeholder="Payout Without Trade" value="${c?.payout_without_trade || ''}" data-k="payout_without_trade"/></div>
+            <div><label class="block text-xs text-gray-500 mb-1">Account Open Video</label><input class="w-full border rounded px-2 py-1" placeholder="Account Open Video" value="${c?.account_open_video || ''}" data-k="account_open_video"/></div>
+            <div><label class="block text-xs text-gray-500 mb-1">Trade Video</label><input class="w-full border rounded px-2 py-1" placeholder="Trade Video" value="${c?.trade_video || ''}" data-k="trade_video"/></div>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <button class="flex-grow bg-black text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition" data-save>Save</button>
+            ${c?.id ? '<button class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition" data-del>Delete</button>' : ''}
+          </div>
+        `;
+        card.querySelector('[data-save]').addEventListener('click', async () => {
+          const inputs = card.querySelectorAll('input');
+          const payload = {};
+          inputs.forEach(i => payload[i.getAttribute('data-k')] = i.value.trim());
+          if (c?.id) {
+            const { error } = await App.supabase.from('campaigns').update(payload).eq('id', c.id);
+            if (error) return showNotification('Error updating campaign: ' + error.message);
+            showNotification('Campaign updated.');
+          } else {
+            const { error } = await App.supabase.from('campaigns').insert(payload);
+            if (error) return showNotification('Error creating campaign: ' + error.message);
+            showNotification('Campaign created.');
+            await loadCampaigns(); // Reload to show new ID/Delete button
+          }
+          updateCounts(); // Update campaign count
+        });
+        const delBtn = card.querySelector('[data-del]');
+        if (delBtn) delBtn.addEventListener('click', async () => {
+          // --- CONFIRMATION FIX ---
+          const confirmation = window.prompt('Type "CONFIRM DELETE" to delete campaign:');
+          if (confirmation !== 'CONFIRM DELETE') return;
+          // --- END CONFIRMATION FIX ---
+
+          const { error } = await App.supabase.from('campaigns').delete().eq('id', c.id);
+          if (error) return showNotification('Error deleting campaign: ' + error.message);
+          card.remove();
+          updateCounts(); // Update campaign count
+        });
+        return card;
+      };
+      const loadCampaigns = async () => {
+        const { data } = await App.fetchCampaigns();
+        campaignsEl.innerHTML = '';
+        (data || []).forEach(c => campaignsEl.appendChild(renderCampaignRow(c)));
+      };
+
+      // Function to load users and earnings
+      const usersEl = document.getElementById('users');
+      const loadUsersAndEarnings = async () => {
+        const { data: users } = await App.supabase.from('profiles').select('id, full_name, email');
+        const { data: earningsRows } = await App.supabase.from('earnings').select('*');
+        const earningsByUser = new Map((earningsRows || []).map(e => [e.user_id, e]));
+        usersEl.innerHTML = '';
+        users?.forEach(u => {
+          const e = earningsByUser.get(u.id) || { today: 0, week: 0, total: 0 };
+          const card = document.createElement('div');
+          card.className = 'bg-gray-50 p-4 rounded-lg shadow';
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <div class="font-bold text-lg">${u.full_name || '(no name)'}</div>
+                <div class="text-sm text-gray-500">${u.email || ''}</div>
+            </div>
+            <button class="bg-black text-white text-sm px-4 py-2 rounded-md hover:bg-gray-700 transition" data-save>Save</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="text-sm text-gray-500">1 Day Earning</label>
+              <input type="number" step="1" class="w-full border rounded px-2 py-1 mt-1" value="${e.today || 0}" data-field="today"/>
+            </div>
+            <div>
+              <label class="text-sm text-gray-500">7 Day Earning</label>
+              <input type="number" step="1" class="w-full border rounded px-2 py-1 mt-1" value="${e.week || 0}" data-field="week"/>
+            </div>
+            <div>
+              <label class="text-sm text-gray-500">Total Earning</label>
+              <input type="number" step="1" class="w-full border rounded px-2 py-1 mt-1" value="${e.total || 0}" data-field="total"/>
+            </div>
+          </div>
+        `;
+          card.querySelector('[data-save]').addEventListener('click', async () => {
+            const inputs = card.querySelectorAll('input');
+            const payload = { user_id: u.id };
+            inputs.forEach(i => {
+              const k = i.getAttribute('data-field');
+              if (!k) return;
+              payload[k] = Number(i.value || 0);
+            });
+            const { error } = await App.supabase.from('earnings').upsert(payload, { onConflict: 'user_id' });
+            if (error) console.error(error.message); else showNotification('Earnings saved successfully.'); 
+          });
+          usersEl.appendChild(card);
+        });
+      };
+
+
+      // Function to update the top stat counts
+      const updateCounts = async () => {
+        const [{ count: usersCount }, { count: pendingCount }, { count: campaignsCount }] = await Promise.all([
+          App.supabase.from('profiles').select('*', { count: 'exact', head: true }),
+          App.supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'Received'),
+          App.supabase.from('campaigns').select('*', { count: 'exact', head: true })
+        ]);
+        document.getElementById('count-users').textContent = usersCount ?? 0;
+        document.getElementById('count-pending').textContent = pendingCount ?? 0;
+        document.getElementById('count-campaigns').textContent = campaignsCount ?? 0;
+      };
+
+      // Initial data load and event listeners setup
+      await Promise.all([
+        updateCounts(),
+        loadReports(), 
+        loadCampaigns(),
+        loadUsersAndEarnings()
+      ]);
+      
+      document.getElementById('filter-status').addEventListener('change', loadReports);
+      document.getElementById('filter-trade').addEventListener('change', loadReports);
+      document.getElementById('filter-payment').addEventListener('change', loadReports);
+      document.getElementById('add-campaign').addEventListener('click', () => {
+        campaignsEl.prepend(renderCampaignRow(null));
+      });
+
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Payouts - HATS Consulting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6366F1', // indigo-500
+                        'brand-purple-dark': '#4F46E5', // indigo-600
+                        'brand-red': '#EF4444', // red-500
+                        'brand-blue': '#3B82F6', // blue-500
+                        'light-bg': '#F3F4F6',    // gray-100
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .details-section {
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .details-section.open {
+            max-height: 500px; /* Adjust as needed */
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-poppins bg-light-bg text-gray-800">
+
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-bold text-center text-gray-900 mb-10">Application Payouts</h1>
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script src="./assets/config.js"></script>
+    <script src="./assets/app.js"></script>
+    <script>
+        (async function() {
+            const grid = document.getElementById('grid');
+            const { data: campaigns, error } = await App.fetchCampaigns();
+            if (error) {
+                grid.innerHTML = '<div class="text-red-600">Failed to load campaigns.</div>';
+                return;
+            }
+            if (!campaigns || campaigns.length === 0) {
+                grid.innerHTML = '<div class="text-gray-600">No campaigns yet.</div>';
+                return;
+            }
+            campaigns.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col';
+                card.innerHTML = `
+                    <div class="bg-brand-purple p-4 flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-white rounded-md flex items-center justify-center text-brand-purple font-bold">${(c.name || '?').slice(0,2)}</div>
+                        <h2 class="text-xl font-bold text-white">${c.name || 'Campaign'}</h2>
+                    </div>
+                    <div class="p-6 space-y-5">
+                        <div>
+                            <h3 class="font-semibold text-gray-700 mb-2"><i class="fas fa-video mr-2 text-gray-500"></i>Video Links</h3>
+                            <div class="flex gap-3 flex-wrap">
+                                ${c.account_open_video ? `<a class="bg-brand-blue text-white text-sm font-semibold py-1 px-3 rounded-md flex items-center" target="_blank" rel="noopener" href="${c.account_open_video}"><i class="fas fa-play mr-1.5"></i>Account Open</a>` : `<span class="bg-brand-red text-white text-sm font-semibold py-1 px-3 rounded-md flex items-center"><i class=\"fas fa-times-circle mr-1.5\"></i>Not Available</span>`}
+                                ${c.trade_video ? `<a class="bg-brand-blue text-white text-sm font-semibold py-1 px-3 rounded-md flex items-center" target="_blank" rel="noopener" href="${c.trade_video}"><i class="fas fa-play mr-1.5"></i>Trade</a>` : `<span class="bg-brand-red text-white text-sm font-semibold py-1 px-3 rounded-md flex items-center"><i class=\"fas fa-times-circle mr-1.5\"></i>Not Available</span>`}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-700 mb-2"><i class="fas fa-link mr-2 text-gray-500"></i>Referral Link</h3>
+                            ${c.referral_link ? `<a class="bg-brand-blue text-white text-sm font-semibold py-1 px-3 rounded-md inline-flex items-center" target="_blank" rel="noopener" href="${c.referral_link}"><i class="fas fa-share-square mr-1.5"></i>Open Link</a>` : '<span class="text-gray-500 text-sm">No link</span>'}
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-6 mx-6 mb-6 rounded-lg">
+                         <h3 class="font-semibold text-gray-700 mb-3">Payout</h3>
+                         <div class="space-y-2 text-gray-600">
+                             <div class="flex justify-between items-center">
+                                 <span>With Trade:</span>
+                                 <span class="font-bold text-gray-900">${c.payout_with_trade ?? '—'}</span>
+                             </div>
+                             <div class="flex justify-between items-center">
+                                 <span>Without Trade:</span>
+                                 <span class="font-bold text-gray-900">${c.payout_without_trade ?? '—'}</span>
+                             </div>
+                         </div>
+                    </div>
+                    ${c.notes ? `<div class=\"px-6 pb-6 text-sm text-gray-700\">${c.notes}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        })();
+    </script>
+
+</body>
+</html>
+

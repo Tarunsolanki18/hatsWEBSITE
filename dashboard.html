@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-[Inter]">
+  <div class="max-w-5xl mx-auto p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">Dashboard</h1>
+      <div class="flex items-center gap-3">
+        <span id="user-email" class="text-gray-600 text-sm"></span>
+        <button id="logout" class="bg-gray-800 text-white px-3 py-1.5 rounded">Logout</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded shadow p-4">
+        <div class="text-gray-500 text-sm">Today Earning</div>
+        <div id="earn-today" class="text-2xl font-semibold">₹0</div>
+      </div>
+      <div class="bg-white rounded shadow p-4">
+        <div class="text-gray-500 text-sm">7-day Earning</div>
+        <div id="earn-week" class="text-2xl font-semibold">₹0</div>
+      </div>
+      <div class="bg-white rounded shadow p-4">
+        <div class="text-gray-500 text-sm">All-time Earning</div>
+        <div id="earn-total" class="text-2xl font-semibold">₹0</div>
+      </div>
+    </div>
+
+    <!-- Card layout based on the image -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <!-- Submit My Work Card -->
+      <div class="bg-white rounded shadow p-8 text-center">
+        <div class="flex justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7v3m0 0v3m0-3h3m-3 0H9" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">Submit My Work</h2>
+        <p class="text-gray-500 mb-4">Submit Your Work Now</p>
+        <a href="submit-report.html" class="inline-block bg-black text-white px-4 py-2 rounded">Submit Report</a>
+      </div>
+      
+      <!-- Check My Work Card -->
+      <div class="bg-white rounded shadow p-8 text-center">
+        <div class="flex justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">Check My Work</h2>
+        <p class="text-gray-500 mb-4">Check Your Work Status</p>
+        <button id="show-reports" class="bg-black text-white px-4 py-2 rounded">View Reports</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <!-- Campaign Card (replacing Payment) -->
+      <div class="bg-white rounded shadow p-8 text-center">
+        <div class="flex justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">Campaigns</h2>
+        <p class="text-gray-500 mb-4">View Available Campaigns</p>
+        <a href="campaign.html" class="inline-block bg-black text-white px-4 py-2 rounded">View Campaigns</a>
+      </div>
+      
+      <!-- My Earnings Card -->
+      <div class="bg-white rounded shadow p-8 text-center">
+        <div class="flex justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">My Earnings</h2>
+        <p class="text-gray-500 mb-4">View Your Earnings & Profile</p>
+        <a href="earnings.html" class="inline-block bg-black text-white px-4 py-2 rounded">View Earnings</a>
+      </div>
+    </div>
+
+    <!-- Reports section (initially hidden) -->
+    <div id="reports-section" class="bg-white rounded shadow mb-8 hidden">
+      <div class="p-4 border-b">
+        <h2 class="font-semibold mb-4">My Reports</h2>
+        
+        <!-- Filters Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <!-- User Name Filter -->
+          <div>
+            <label class="block text-gray-500 text-sm mb-1">Filter by User Name</label>
+            <select id="user-filter" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+              <option value="">All Users</option>
+              <!-- User options will be populated dynamically -->
+            </select>
+          </div>
+          
+          <!-- Status Filter -->
+          <div>
+            <label class="block text-gray-500 text-sm mb-1">Filter by Status</label>
+            <select id="status-filter" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+              <option value="">All Status</option>
+              <option value="Not Found">Not Found</option>
+              <option value="Pending">Pending</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Account Open">Account Open</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Report Cards -->
+      <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Account Open Reports Card -->
+        <div id="account-open-card" class="border rounded-lg p-4 bg-blue-50">
+          <h3 class="font-semibold text-lg mb-3 text-blue-800">Account Open Reports</h3>
+          <div id="account-open-reports" class="space-y-3">
+            <!-- Account open reports will be populated here -->
+          </div>
+          <div id="no-account-open-reports" class="text-gray-500 text-sm py-2 hidden">No account open reports available.</div>
+        </div>
+        
+        <!-- Trade Reports Card -->
+        <div id="trade-card" class="border rounded-lg p-4 bg-green-50">
+          <h3 class="font-semibold text-lg mb-3 text-green-800">Trade Reports</h3>
+          <div id="trade-reports" class="space-y-3">
+            <!-- Trade reports will be populated here -->
+          </div>
+          <div id="no-trade-reports" class="text-gray-500 text-sm py-2 hidden">No trade reports available.</div>
+        </div>
+      </div>
+      
+      <div id="reports" class="divide-y hidden"></div>
+      <div id="no-reports" class="p-4 text-gray-500 hidden">No reports yet.</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="./assets/config.js"></script>
+  <script src="./assets/app.js"></script>
+  <script>
+    (async function() {
+      const session = await App.requireAuth({ redirectTo: 'login.html' });
+      const user = session.user;
+      await App.upsertProfile(user.id, { email: user.email, full_name: user.user_metadata?.fullname || null });
+      document.getElementById('user-email').textContent = user.email;
+
+      document.getElementById('logout').addEventListener('click', async () => {
+        await App.signOut();
+        window.location.href = 'login.html';
+      });
+
+      const { data: earnings } = await App.fetchEarnings(user.id);
+      document.getElementById('earn-today').textContent = `₹${earnings?.today || 0}`;
+      document.getElementById('earn-week').textContent = `₹${earnings?.week || 0}`;
+      document.getElementById('earn-total').textContent = `₹${earnings?.total || 0}`;
+
+      // Load reports but keep them hidden initially
+      const reportsSection = document.getElementById('reports-section');
+      const listEl = document.getElementById('reports');
+      const emptyEl = document.getElementById('no-reports');
+      const accountOpenReportsEl = document.getElementById('account-open-reports');
+      const tradeReportsEl = document.getElementById('trade-reports');
+      const noAccountOpenReportsEl = document.getElementById('no-account-open-reports');
+      const noTradeReportsEl = document.getElementById('no-trade-reports');
+      const userFilterEl = document.getElementById('user-filter');
+      const statusFilterEl = document.getElementById('status-filter');
+      
+      // Fetch all reports
+      const { data: reports } = await App.fetchMyReports(user.id);
+      
+      // Show reports when "View Reports" button is clicked
+      document.getElementById('show-reports').addEventListener('click', () => {
+        reportsSection.classList.toggle('hidden');
+      });
+      
+      // Function to populate user filter dropdown
+      function populateUserFilter(reports) {
+        // Clear existing options except the first one
+        while (userFilterEl.options.length > 1) {
+          userFilterEl.remove(1);
+        }
+        
+        // Get unique customer names
+        const uniqueUsers = [...new Set(reports.map(r => r.customer_name).filter(Boolean))];
+        
+        // Add options to the dropdown
+        uniqueUsers.forEach(userName => {
+          const option = document.createElement('option');
+          option.value = userName;
+          option.textContent = userName;
+          userFilterEl.appendChild(option);
+        });
+      }
+      
+      // Function to display reports based on filters
+      function displayReports(reports) {
+        // Clear existing reports
+        accountOpenReportsEl.innerHTML = '';
+        tradeReportsEl.innerHTML = '';
+        
+        // Filter reports based on selected filters
+        const selectedUser = userFilterEl.value;
+        const selectedStatus = statusFilterEl.value;
+        
+        let filteredReports = reports;
+        
+        if (selectedUser) {
+          filteredReports = filteredReports.filter(r => r.customer_name === selectedUser);
+        }
+        
+        if (selectedStatus) {
+          filteredReports = filteredReports.filter(r => r.status === selectedStatus);
+        }
+        
+        // Separate reports by type
+        const accountOpenReports = filteredReports.filter(r => r.status === 'Account Open');
+        const tradeReports = filteredReports.filter(r => r.trade_status === 'Done');
+        
+        // Display account open reports
+        if (accountOpenReports.length === 0) {
+          noAccountOpenReportsEl.classList.remove('hidden');
+        } else {
+          noAccountOpenReportsEl.classList.add('hidden');
+          accountOpenReports.forEach(r => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded border p-3 text-sm';
+            card.innerHTML = `
+              <div class="font-semibold">${r.customer_name || 'Unknown User'}</div>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <div><span class="text-gray-500">App:</span> ${r.application_name || '-'}</div>
+                <div><span class="text-gray-500">Mobile:</span> ${r.mobile_number || '-'}</div>
+                <div><span class="text-gray-500">Status:</span> ${r.status || 'Received'}</div>
+                <div><span class="text-gray-500">Date:</span> ${new Date(r.created_at).toLocaleDateString()}</div>
+              </div>
+            `;
+            accountOpenReportsEl.appendChild(card);
+          });
+        }
+        
+        // Display trade reports
+        if (tradeReports.length === 0) {
+          noTradeReportsEl.classList.remove('hidden');
+        } else {
+          noTradeReportsEl.classList.add('hidden');
+          tradeReports.forEach(r => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded border p-3 text-sm';
+            card.innerHTML = `
+              <div class="font-semibold">${r.customer_name || 'Unknown User'}</div>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <div><span class="text-gray-500">App:</span> ${r.application_name || '-'}</div>
+                <div><span class="text-gray-500">Mobile:</span> ${r.mobile_number || '-'}</div>
+                <div><span class="text-gray-500">Trade:</span> ${r.trade_status || 'Pending'}</div>
+                <div><span class="text-gray-500">Date:</span> ${new Date(r.created_at).toLocaleDateString()}</div>
+              </div>
+            `;
+            tradeReportsEl.appendChild(card);
+          });
+        }
+      }
+      
+      // Add event listeners to filters
+      userFilterEl.addEventListener('change', () => displayReports(reports));
+      statusFilterEl.addEventListener('change', () => displayReports(reports));
+      
+      if (!reports || reports.length === 0) {
+        emptyEl.classList.remove('hidden');
+        noAccountOpenReportsEl.classList.remove('hidden');
+        noTradeReportsEl.classList.remove('hidden');
+      } else {
+        // Populate user filter
+        populateUserFilter(reports);
+        
+        // Display reports
+        displayReports(reports);
+      }
+      
+      // Listen for new report submissions
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'newReportSubmitted') {
+          // Refresh reports data
+          (async function() {
+            const { data: updatedReports } = await App.fetchMyReports(user.id);
+            if (updatedReports) {
+              // Update reports array
+              reports.length = 0;
+              updatedReports.forEach(r => reports.push(r));
+              
+              // Update user filter
+              populateUserFilter(reports);
+              
+              // Refresh display
+              displayReports(reports);
+            }
+          })();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

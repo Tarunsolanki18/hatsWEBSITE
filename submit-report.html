@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Report - HATS Consulting</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans flex items-center justify-center min-h-screen">
+
+<div class="bg-white shadow-lg rounded-xl w-full max-w-md p-8">
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold mb-1">📄 Submit Report</h2>
+        <p class="text-gray-500 text-sm">Provide details to submit your report</p>
+    </div>
+
+    <form id="report-form" class="space-y-4">
+        <!-- Application Dropdown -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">📱 Application</label>
+            <select id="appName" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400">
+                <option value="" disabled selected>Select application</option>
+                <option value="Angel One">Angel One</option>
+                <option value="Upstox">Upstox</option>
+                <option value="Zerodha">Zerodha</option>
+                <option value="Mstock">Mstock</option>
+
+            </select>
+        </div>
+
+        <!-- Customer Name -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">👤 Customer Name</label>
+            <input type="text" id="customerName" maxlength="20" placeholder="Customer name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400"/>
+            <span class="text-gray-400 text-xs float-right mt-1" id="name-count">0/20</span>
+        </div>
+
+        <!-- Mobile Number -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">📞 Mobile Number</label>
+            <input type="text" id="mobileNumber" maxlength="10" placeholder="10 digit number" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400"/>
+            <span class="text-gray-400 text-xs float-right mt-1" id="mobile-count">0/10</span>
+        </div>
+
+        <!-- Trade done -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">🔁 Trade Done?</label>
+            <select id="tradeDone" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400">
+                <option value="Pending">No</option>
+                <option value="Done">Yes</option>
+            </select>
+        </div>
+
+        <!-- Payment proof -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">🧾 Payment Proof (optional)</label>
+            <input type="file" id="paymentProof" accept="image/*,application/pdf" class="w-full"/>
+        </div>
+
+        <!-- Notes -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">📝 Notes</label>
+            <textarea id="notes" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400" placeholder="Any additional details..."></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex justify-center items-center gap-2">
+            <i class="fas fa-paper-plane"></i> Submit Report
+        </button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="./assets/config.js"></script>
+<script src="./assets/app.js"></script>
+<script>
+const nameInput = document.getElementById('customerName');
+const nameCount = document.getElementById('name-count');
+const mobileInput = document.getElementById('mobileNumber');
+const mobileCount = document.getElementById('mobile-count');
+
+nameInput.addEventListener('input', () => {
+    nameCount.textContent = `${nameInput.value.length}/20`;
+});
+
+mobileInput.addEventListener('input', () => {
+    mobileCount.textContent = `${mobileInput.value.length}/10`;
+});
+
+document.getElementById('report-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const session = await App.requireAuth({ redirectTo: 'login.html' });
+    const user = session.user;
+    await App.upsertProfile(user.id, { email: user.email, full_name: user.user_metadata?.fullname || null });
+    const application = document.getElementById('appName').value;
+    const customerName = nameInput.value.trim();
+    const mobileNumber = mobileInput.value.trim();
+    const tradeStatus = document.getElementById('tradeDone').value;
+    const notes = document.getElementById('notes').value.trim();
+    const file = document.getElementById('paymentProof').files[0];
+
+    if (!application || !customerName || !mobileNumber) {
+        return alert('Please fill all required fields');
+    }
+
+    let proofUrl = null;
+    if (file) {
+        const { data, error } = await App.uploadProof(user.id, file);
+        if (error) return alert(error.message);
+        proofUrl = data.publicUrl;
+    }
+
+    const payload = {
+        user_id: user.id,
+        application_name: application,
+        customer_name: customerName,
+        mobile_number: mobileNumber,
+        trade_status: tradeStatus,
+        payment_proof_url: proofUrl,
+        notes
+    };
+    const { data: report, error } = await App.createReport(payload);
+    if (error) return alert(error.message);
+    
+    // Trigger event for dashboard to update filters
+    localStorage.setItem('newReportSubmitted', Date.now().toString());
+    
+    alert(`Report submitted successfully!\nReport ID: ${report.id}`);
+    window.location.href = 'dashboard.html';
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+</body>
+</html>
